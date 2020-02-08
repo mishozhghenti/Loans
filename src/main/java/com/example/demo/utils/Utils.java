@@ -1,7 +1,7 @@
 package com.example.demo.utils;
 
 import com.example.demo.models.Loan;
-import com.example.demo.models.RequestStatus;
+import com.example.demo.models.Status;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -10,7 +10,7 @@ import java.util.GregorianCalendar;
 public class Utils {
 
 
-    public static RequestStatus verifyLoanRequest(Loan loan) {
+    public static Status verifyLoanRequest(Loan loan) {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(loan.getBirthday());
 
@@ -21,12 +21,12 @@ public class Utils {
                 loan.getBirthday().getMonth() -
                 calendar.get(Calendar.DAY_OF_YEAR);
 
-        RequestStatus result = RequestStatus.MANUAL;
+        Status result = Status.MANUAL;
 
         if (score < 2500) {
-            result = RequestStatus.REJECTED;
+            result = Status.REJECTED;
         } else if (score > 3500) {
-            result = RequestStatus.APPROVED;
+            result = Status.APPROVED;
         }
         return result;
     }

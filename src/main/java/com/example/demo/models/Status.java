@@ -1,6 +1,6 @@
 package com.example.demo.models;
 
-public enum RequestStatus {
+public enum Status {
     REJECTED,
     APPROVED,
     MANUAL;
