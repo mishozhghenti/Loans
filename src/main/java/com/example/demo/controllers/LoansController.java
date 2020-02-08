@@ -1,8 +1,9 @@
 package com.example.demo.controllers;
 
 import com.example.demo.models.Loan;
+import com.example.demo.models.RequestStatus;
+import com.example.demo.utils.Utils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,20 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoansController {
 
 
-
     @GetMapping("/create")
-    public String createLoan(Loan loan){
-        return "Created";
+    public RequestStatus createLoan(Loan loan) {
+        return Utils.verifyLoanRequest(loan);
     }
 
     @GetMapping("/delete")
-    public String deleteLoan(){
+    public String deleteLoan(long loanId) {
         return "Deleted";
     }
 
 
     @GetMapping("/getLoans")
-    public String getLoans(){
+    public String getLoans() {
         return "All Loans";
     }
 
