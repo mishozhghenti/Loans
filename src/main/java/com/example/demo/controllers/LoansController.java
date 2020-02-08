@@ -3,8 +3,11 @@ package com.example.demo.controllers;
 import com.example.demo.models.Loan;
 import com.example.demo.models.Status;
 import com.example.demo.repository.LoanRepository;
+import com.example.demo.response.Response;
+import com.example.demo.response.Result;
 import com.example.demo.utils.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +20,18 @@ import java.util.List;
 @RequestMapping("api/loans")
 public class LoansController {
 
-    @Autowired
+    private final
     EntityManager entityManager;
-    @Autowired
-    private LoanRepository loanRepository;
+    private final LoanRepository loanRepository;
+
+    public LoansController(EntityManager entityManager, LoanRepository loanRepository) {
+        this.entityManager = entityManager;
+        this.loanRepository = loanRepository;
+    }
 
     @GetMapping("/create")
-    public Object createLoan(Loan loan) {
+    public Response createLoan(Loan loan) {
+        Response response;
         com.example.demo.entity.Loan item =
                 new com.example.demo.entity.Loan();
         item.setPersonalId(loan.getPersonalId());
@@ -40,32 +48,33 @@ public class LoansController {
 
         try {
             loanRepository.save(item);
-        } catch (Exception e) {
-            System.out.println(e);
+            response = Result.OK.getResponse();
+        } catch (Exception ign) {
+            response = Result.ERROR.getResponse();
         }
-        return "OK";
+        return response;
     }
 
     @GetMapping("/delete")
     @Transactional
-    public String deleteLoan(long loanId) {
+    public Response deleteLoan(long loanId) {
         com.example.demo.entity.Loan currentLoan = entityManager.find(com.example.demo.entity.Loan.class, loanId);
 
         if (currentLoan == null) {
-            return "No such record";
+            return Result.ERROR.getResponse();
         }
         entityManager.remove(currentLoan);
         entityManager.flush();
         entityManager.clear();
 
-        return "OK";
+        return Result.OK.getResponse();
+
     }
 
 
     @GetMapping("/getLoans")
-    public  List<com.example.demo.entity.Loan> getLoans() {
-        List<com.example.demo.entity.Loan> s = loanRepository.findAll();
-        return s;
+    public Response getLoans() {
+        return Result.OK.getResponse(loanRepository.findAll());
     }
 
 }
