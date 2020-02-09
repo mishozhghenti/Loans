@@ -1,4 +1,4 @@
-# loans
+# Loans
 Simple loans app
 
 # Build Project
