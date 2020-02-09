@@ -53,7 +53,7 @@ public class LoansController {
         return response;
     }
 
-    @GetMapping("/delete")
+    @PostMapping("/delete")
     @Transactional
     public Response deleteLoan(long loanId) {
         com.example.demo.entity.Loan currentLoan = entityManager.find(com.example.demo.entity.Loan.class, loanId);
@@ -66,7 +66,6 @@ public class LoansController {
         entityManager.clear();
 
         return Result.OK.getResponse();
-
     }
 
 

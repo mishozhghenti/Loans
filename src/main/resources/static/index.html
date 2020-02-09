@@ -119,7 +119,7 @@ All Loans
             table.row.add([current_loan.id, current_loan.personalId, current_loan.firstName,
                 current_loan.lastName, current_loan.birthday, current_loan.employer,
                 current_loan.salary, current_loan.liability, current_loan.requestedAmount,
-                current_loan.requestedTerm, current_loan.status,"ll"]).draw(false);
+                current_loan.requestedTerm, current_loan.status,'<button type=\"button\" onclick=\"delete_loan(' + current_loan.id + ')\" class=\"btn btn-danger\">Delete Loan</button>']).draw(false);
         }
     }
 
@@ -165,8 +165,25 @@ All Loans
                 }
             });
         }
+    }
 
 
+    function delete_loan(loan_id) {
+        $.ajax({
+            url: 'api/loans/delete',
+            type: 'post',
+            data: {
+                loanId: loan_id
+            },
+            success: function (data) {
+                var result = data.returnedResponses;
+                var code = result.errorCode;
+
+                if (code === 0) {
+                    get_loans();
+                }
+            }
+        });
     }
 </script>
 
