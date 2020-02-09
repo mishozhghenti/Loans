@@ -64,6 +64,7 @@ All Loans
         <th>Requested Amount</th>
         <th>Requested Term</th>
         <th>Status</th>
+        <th>Set Status</th>
         <th>Delete</th>
     </tr>
     </thead>
@@ -82,6 +83,7 @@ All Loans
         <th>Requested Amount</th>
         <th>Requested Term</th>
         <th>Status</th>
+        <th>Set Status</th>
         <th>Delete</th>
     </tr>
     </tfoot>
@@ -114,12 +116,30 @@ All Loans
 
     function display_loans(loans) {
         var number_of_rows = loans.length;
+
+        function get_set_status_div(loan_status, loan_id) {
+            if (loan_status === 'MANUAL') {
+                return "<select id=\'selected_status\' class=\'form-control\' onchange=\'set_status(" + loan_id + "," + "this)\'>\n" +
+                    "<option value=\'2\' selected=\'true\'>MANUAL</option>\n" +
+                    "<option value=\'1\'>APPROVED</option>\n" +
+                    "<option value=\'0\'>REJECTED</option>\n";
+            } else {
+                return "<select id=\'selected_status\' class=\'form-control\'>\n" +
+                    "<option value=\'2\' selected=\'true\'>" + loan_status + "</option>\n";
+            }
+        }
+
         for (var i = 0; i < number_of_rows; i++) {
             var current_loan = loans[i];
-            table.row.add([current_loan.id, current_loan.personalId, current_loan.firstName,
+            var loan_id = current_loan.id;
+            var loan_status = current_loan.status;
+
+            table.row.add([loan_id, current_loan.personalId, current_loan.firstName,
                 current_loan.lastName, current_loan.birthday, current_loan.employer,
                 current_loan.salary, current_loan.liability, current_loan.requestedAmount,
-                current_loan.requestedTerm, current_loan.status,'<button type=\"button\" onclick=\"delete_loan(' + current_loan.id + ')\" class=\"btn btn-danger\">Delete Loan</button>']).draw(false);
+                current_loan.requestedTerm, loan_status,
+                get_set_status_div(loan_status, loan_id),
+                '<button type=\"button\" onclick=\"delete_loan(' + current_loan.id + ')\" class=\"btn btn-danger\">Delete Loan</button>']).draw(false);
         }
     }
 
@@ -178,8 +198,25 @@ All Loans
             success: function (data) {
                 var result = data.returnedResponses;
                 var code = result.errorCode;
-
                 if (code === 0) {
+                    get_loans();
+                }
+            }
+        });
+    }
+
+
+    function set_status(loan_id, selected) {
+        $.ajax({
+            url: 'api/loans/setStatus',
+            type: 'get',
+            data: {
+                loanId: loan_id,
+                statusId: selected.value
+            },
+            success: function (resp) {
+                var response = resp.returnedResponses;
+                if (response.errorCode === 0) {
                     get_loans();
                 }
             }

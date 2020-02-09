@@ -74,4 +74,22 @@ public class LoansController {
         return Result.OK.getResponse(loanRepository.findAll());
     }
 
+
+    @GetMapping("/setStatus")
+    public Response setStatus(long loanId, int statusId) {
+        com.example.demo.entity.Loan currentLoan = entityManager.find(com.example.demo.entity.Loan.class, loanId);
+
+        if (currentLoan == null || currentLoan.getStatus() != Status.MANUAL || statusId < 0 || statusId >= 2) {
+            return Result.ERROR.getResponse();
+        }
+
+        if (statusId == 0) {
+            currentLoan.setStatus(Status.REJECTED);
+        } else {
+            currentLoan.setStatus(Status.APPROVED);
+        }
+        loanRepository.save(currentLoan);
+        return Result.OK.getResponse();
+    }
+
 }
