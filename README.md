@@ -2,10 +2,10 @@
 Simple loans app
 
 # Build Project
-mvn clear install
+    mvn clear install
 
 # Run Project
-mvn spring-boot:run
+    mvn spring-boot:run
 
 
 * Application UI starts here: http://localhost:8080/index.html
