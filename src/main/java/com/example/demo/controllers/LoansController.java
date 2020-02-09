@@ -8,6 +8,7 @@ import com.example.demo.response.Result;
 import com.example.demo.utils.Utils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +27,7 @@ public class LoansController {
         this.loanRepository = loanRepository;
     }
 
-    @GetMapping("/create")
+    @PostMapping("/create")
     public Response createLoan(Loan loan) {
         Response response;
         com.example.demo.entity.Loan item =
@@ -45,7 +46,7 @@ public class LoansController {
 
         try {
             loanRepository.save(item);
-            response = Result.OK.getResponse();
+            response = Result.OK.getResponse(loanRequestStatus);
         } catch (Exception ign) {
             response = Result.ERROR.getResponse();
         }
